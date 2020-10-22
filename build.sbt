@@ -14,7 +14,8 @@ scalacOptions ++= Seq(
   "-feature",
   "-language:_",
   "-unchecked",
-  "-Xfatal-warnings"
+  // TODO: re-enable this after cleanup
+  // "-Xfatal-warnings"
 )
 
 scalafmtOnCompile := true

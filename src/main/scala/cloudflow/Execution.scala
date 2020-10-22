@@ -2,6 +2,6 @@ package cloudflow
 
 import scala.concurrent.Future
 
-trait Action {
+trait Execution {
   def run(): Future[Result[_]]
 }

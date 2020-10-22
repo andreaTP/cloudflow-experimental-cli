@@ -3,9 +3,7 @@ package commands
 
 import caseapp._
 
-sealed trait Command {
-  // val logLevel: String
-}
+sealed trait Command {}
 
 // case class CommonOptions(
 //     @HelpMessage("the logging level")
@@ -16,9 +14,7 @@ sealed trait Command {
 case class Version(
     // @Recurse
     // common: CommonOptions
-) extends Command {
-  // val logLevel = common.logLevel.get
-}
+) extends Command {}
 
 case class List() extends Command {}
 
@@ -28,6 +24,4 @@ case class Deploy(
     cr: String
     // @Recurse
     // common: CommonOptions
-) extends Command {
-  // val logLevel = common.logLevel.get
-}
+) extends Command {}

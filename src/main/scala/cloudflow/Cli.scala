@@ -4,28 +4,30 @@ import commands._
 import k8sclient._
 import scala.concurrent.{ExecutionContext, Future}
 
-class Cli(command: Command, logger: CliLogger, k8sConfig: Option[String])(
+class Cli(logger: CliLogger, k8sConfig: Option[String])(
     implicit ec: ExecutionContext
 ) {
+  private implicit val log = logger
 
-  def run(): Future[Unit] = {
+  private implicit lazy val k8sClient = new K8sClientFabric8(k8sConfig)
+
+  def run(command: Command): Future[Unit] = {
+
     logger.trace(s"Cli run command: $command")
 
-    lazy val k8sClient = new K8sClientFabric8(k8sConfig)
-
-    val action = command match {
-      case _: Version => actions.Version
-      case _: List    => actions.List(k8sClient)
+    val exec = command match {
+      case cmd: Version => execution.VersionExecution(cmd)
+      case cmd: List    => execution.ListExecution(cmd)
       case _ =>
         val msg = "No action defined for the command."
         logger.error(msg)
         throw new Exception(msg)
     }
 
-    logger.trace(s"Cli action: $action")
+    logger.trace(s"Cli going to execute: $exec")
 
     (for {
-      res <- action.run()
+      res <- exec.run()
     } yield {
       logger.trace(s"Action executed successfully, result: $res")
       res.content match {

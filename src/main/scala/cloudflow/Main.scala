@@ -60,9 +60,9 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
     val res = (for {
       logger <- cliLogger.future
       config <- k8sConfig.future
-      cli = new Cli(command, logger, config)
+      cli = new Cli(logger, config)
       _ <- warningOnRemainingArgs(args, logger)
-      _ <- cli.run()
+      _ <- cli.run(command)
     } yield {
       logger.close()
 
