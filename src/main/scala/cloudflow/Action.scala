@@ -3,5 +3,5 @@ package cloudflow
 import scala.concurrent.Future
 
 trait Action {
-  def run(): Future[Unit]
+  def run(): Future[Result[_]]
 }

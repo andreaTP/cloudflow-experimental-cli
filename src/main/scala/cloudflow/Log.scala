@@ -17,6 +17,7 @@ class CliLogger(level: String) {
   def info(msg: => String) = logger.info(msg)
   def warn(msg: => String) = logger.warn(msg)
   def error(msg: => String) = logger.error(msg)
+  def error(msg: => String, ex: => Throwable) = logger.error(msg, ex)
 
   def close() = {
     logger.getHandlers.foreach { handler =>

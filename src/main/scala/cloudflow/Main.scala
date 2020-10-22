@@ -57,7 +57,7 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
 
   def run(command: Command, args: RemainingArgs): Unit = {
     implicit val ec = ExecutionContext.global
-    val res = for {
+    val res = (for {
       logger <- cliLogger.future
       config <- k8sConfig.future
       cli = new Cli(command, logger, config)
@@ -71,6 +71,11 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
 
       System.err.flush()
       System.err.close()
+      System.exit(0)
+    }).recoverWith {
+      case _ =>
+        System.exit(1)
+        throw new Exception("unreachable code")
     }
     Await.result(res, 30.seconds)
   }
