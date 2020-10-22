@@ -35,7 +35,7 @@ class Cli(command: Command, logger: CliLogger, k8sConfig: Option[String])(
           error.printStackTrace
       }
       ()
-    }).recoverWith{
+    }).recoverWith {
       case ex =>
         logger.error("Unexpected failure", ex)
         Future.failed(ex)
