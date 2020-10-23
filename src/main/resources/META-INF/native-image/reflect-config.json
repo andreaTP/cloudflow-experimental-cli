@@ -46,6 +46,49 @@
   "fields":[{"name":"MODULE$"}]
 },
 {
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplication",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplication$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplicationList",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplicationSpec",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplicationSpec$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplicationStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$CloudflowApplicationStatus$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
   "name":"cloudflow.k8sclient.fabric8Models$ConfigParameterDescriptor",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -78,49 +121,6 @@
 },
 {
   "name":"cloudflow.k8sclient.fabric8Models$Descriptor$",
-  "allPublicMethods":true,
-  "fields":[{"name":"MODULE$"}]
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$Dummy",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$Dummy$",
-  "allPublicMethods":true,
-  "fields":[{"name":"MODULE$"}]
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$DummyList",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$DummySpec",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$DummySpec$",
-  "allPublicMethods":true,
-  "fields":[{"name":"MODULE$"}]
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$DummyStatus",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"cloudflow.k8sclient.fabric8Models$DummyStatus$",
   "allPublicMethods":true,
   "fields":[{"name":"MODULE$"}]
 },

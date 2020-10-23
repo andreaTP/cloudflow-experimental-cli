@@ -20,6 +20,8 @@ scalacOptions ++= Seq(
 
 scalafmtOnCompile := true
 
+resolvers += Resolver.bintrayRepo("astrac", "maven")
+
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.0",
   "io.quarkus" % "quarkus-kubernetes-client" % "1.9.0.Final",

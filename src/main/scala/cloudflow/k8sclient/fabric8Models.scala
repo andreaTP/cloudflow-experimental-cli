@@ -30,6 +30,7 @@ protected[k8sclient] object fabric8Models {
     override def getMetadata: ObjectMeta = super.getMetadata
   }
 
+  @JsonCreator
   class DoneableCloudflowApplication(
       val resource: CloudflowApplication,
       val function: api.builder.Function[
@@ -38,6 +39,7 @@ protected[k8sclient] object fabric8Models {
       ]
   ) extends CustomResourceDoneable[CloudflowApplication](resource, function) {}
 
+  @JsonCreator
   class CloudflowApplicationList
       extends CustomResourceList[CloudflowApplication] {}
 
