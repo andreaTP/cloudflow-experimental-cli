@@ -9,12 +9,8 @@
     </encoder>
   </appender>
 
-  <appender name="ASYNCSTDOUT" class="ch.qos.logback.classic.AsyncAppender">
-    <appender-ref ref="STDOUT"/>
-  </appender>
-
   <root level="info">
-    <appender-ref ref="ASYNCSTDOUT"/>
+    <appender-ref ref="STDOUT"/>
   </root>
 
   <logger name="ch.qos.logback" level="ERROR" />

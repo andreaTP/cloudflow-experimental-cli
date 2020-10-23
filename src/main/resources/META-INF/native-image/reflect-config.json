@@ -1,9 +1,5 @@
 [
 {
-  "name":"ch.qos.logback.classic.AsyncAppender",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"ch.qos.logback.classic.encoder.PatternLayoutEncoder",
   "allPublicMethods":true,
   "methods":[{"name":"<init>","parameterTypes":[] }]

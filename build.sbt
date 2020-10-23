@@ -57,6 +57,10 @@ graalVMNativeImageOptions := Seq(
   "--no-fallback",
   "--initialize-at-build-time",
   "--report-unsupported-elements-at-runtime",
+  // DEBUG
+  "--allow-incomplete-classpath",
+  // a possibilty
+  // "--delay-class-initialization-to-runtime=",
   "--initialize-at-run-time" + Seq(
     "com.typesafe.config.impl.ConfigImpl",
     "com.typesafe.config.impl.ConfigImpl$EnvVariablesHolder",
