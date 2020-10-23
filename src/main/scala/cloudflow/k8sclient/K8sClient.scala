@@ -1,7 +1,7 @@
 package cloudflow
 package k8sclient
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 object K8sClient {
 
@@ -13,6 +13,6 @@ trait K8sClient {
 
   val config: Option[String]
 
-  def list(): Future[String]
+  def list(): Future[List[models.CRSummary]]
 
 }

@@ -34,6 +34,54 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"cloudflow.k8sclient.fabric8Models$Attribute",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Attribute$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$ConfigParameterDescriptor",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$ConfigParameterDescriptor$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Deployment",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Deployment$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Descriptor",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Descriptor$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
   "name":"cloudflow.k8sclient.fabric8Models$Dummy",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
@@ -60,11 +108,129 @@
   "allPublicConstructors":true
 },
 {
+  "name":"cloudflow.k8sclient.fabric8Models$DummySpec$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
   "name":"cloudflow.k8sclient.fabric8Models$DummyStatus",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
   "allDeclaredConstructors":true,
   "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$DummyStatus$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Endpoint",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Endpoint$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$EndpointStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$EndpointStatus$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$InOutlet",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$InOutlet$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$InOutletSchema",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$InOutletSchema$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$PodStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$PodStatus$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$PortMapping",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$PortMapping$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Streamlet",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$Streamlet$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$StreamletStatus",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$StreamletStatus$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$VolumeMountDescriptor",
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true,
+  "allDeclaredConstructors":true,
+  "allPublicConstructors":true
+},
+{
+  "name":"cloudflow.k8sclient.fabric8Models$VolumeMountDescriptor$",
+  "allPublicMethods":true,
+  "fields":[{"name":"MODULE$"}]
 },
 {
   "name":"com.fasterxml.jackson.annotation.JsonCreator[]"

@@ -11,6 +11,7 @@ final case class ListExecution(l: commands.List)(
     logger: CliLogger
 ) extends Execution {
   def run() = {
+    logger.trace("Executing command List")
     for {
       res <- client.list()
     } yield {

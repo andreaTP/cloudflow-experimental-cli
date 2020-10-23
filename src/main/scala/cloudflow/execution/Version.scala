@@ -2,9 +2,8 @@ package cloudflow
 package execution
 
 import buildinfo.BuildInfo
-import cloudflow.k8sclient.K8sClient
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 final case class VersionExecution(v: commands.Version) extends Execution {
   def run() =

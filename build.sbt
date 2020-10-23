@@ -57,7 +57,7 @@ graalVMNativeImageOptions := Seq(
   "--no-fallback",
   "--initialize-at-build-time",
   "--report-unsupported-elements-at-runtime",
-  // DEBUG
+  // DEBUG possibly to be removed
   "--allow-incomplete-classpath",
   // a possibilty
   // "--delay-class-initialization-to-runtime=",

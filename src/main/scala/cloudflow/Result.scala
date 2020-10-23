@@ -1,5 +1,7 @@
 package cloudflow
 
+import k8sclient.models
+
 sealed trait Result[T] {
   val content: Either[Throwable, T]
 
@@ -11,7 +13,9 @@ final case class VersionResult(version: String) extends Result[String] {
   def render(): String = version
 }
 
-final case class ListResult(something: String) extends Result[String] {
-  val content = Right(something)
-  def render(): String = something
+//fmt.Fprintln(w, "NAME\tNAMESPACE\tVERSION\tCREATION-TIME\t")
+final case class ListResult(summaries: List[models.CRSummary])
+    extends Result[List[models.CRSummary]] {
+  val content = Right(summaries)
+  def render(): String = summaries.mkString("\n")
 }
