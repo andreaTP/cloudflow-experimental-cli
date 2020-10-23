@@ -2,9 +2,10 @@ package cloudflow
 package k8sclient
 
 import K8sClient._
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import fabric8Models._
-
 import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext
+import io.fabric8.kubernetes.client.utils.Serialization
 import io.fabric8.kubernetes.client.{Config, DefaultKubernetesClient}
 
 import scala.collection.JavaConverters._
@@ -15,6 +16,10 @@ class K8sClientFabric8(val config: Option[String])(
     implicit ec: ExecutionContext,
     logger: CliLogger
 ) extends K8sClient {
+
+  Serialization.jsonMapper().registerModule(DefaultScalaModule)
+//  if needed
+  //  Serialization.jsonMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 
   private val kubeConfig = {
     lazy val fromEnv = sys.env.get("KUBECONFIG").map(Config.fromKubeconfig)
@@ -65,6 +70,8 @@ class K8sClientFabric8(val config: Option[String])(
 //    val res = cloudflowClient.list().getItems.asScala.headOption
 
     val res = dummyClient.list().getItems.asScala.head
+
+    println(res)
 
 //    println(tmp.size)
 //    println(tmp.keys.mkString(" - "))

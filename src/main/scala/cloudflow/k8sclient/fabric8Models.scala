@@ -1,6 +1,11 @@
 package cloudflow.k8sclient
 
-import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.annotation.{
+  JsonCreator,
+  JsonIgnoreProperties,
+  JsonProperty
+}
+import com.fasterxml.jackson.databind.{JsonDeserializer, PropertyName}
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import io.fabric8.kubernetes.api
 import io.fabric8.kubernetes.api.model.{
@@ -9,6 +14,7 @@ import io.fabric8.kubernetes.api.model.{
   Namespaced,
   ObjectMeta
 }
+import io.fabric8.kubernetes.client.utils.Serialization
 import io.fabric8.kubernetes.client.{
   CustomResource,
   CustomResourceDoneable,
@@ -19,16 +25,35 @@ import scala.collection.JavaConverters._
 
 object fabric8Models {
 
-  class Dummy() extends CustomResource with Namespaced {
-    var spec: DummySpec = null
+  @JsonCreator
+  case class Dummy(
+      @JsonProperty("spec")
+      spec: DummySpec,
+      @JsonProperty("status")
+      status: DummyStatus
+  ) extends CustomResource
+      with Namespaced {
+//    @PropertyName("spec")
+    // @JsonProperty("spec")
+    // var spec: DummySpec = null
+//    @PropertyName("status")
+    // @JsonProperty("status")
+    // var status: DummyStatus = null
+
     override def toString: String =
       "Dummy{" + "apiVersion='" + getApiVersion + '\'' + ", metadata=" + getMetadata + ", spec=" + spec + '}'
 
-    def getSpec: DummySpec = spec
+    // def getSpec: DummySpec = spec
 
-    def setSpec(spec: DummySpec): Unit = {
-      this.spec = spec
-    }
+    // def setSpec(spec: DummySpec): Unit = {
+    //   this.spec = spec
+    // }
+
+    // def getStatus: DummyStatus = status
+
+    // def setStatus(spec: DummyStatus): Unit = {
+    //   this.status = status
+    // }
 
     override def getMetadata: ObjectMeta = super.getMetadata
   }
@@ -41,6 +66,8 @@ object fabric8Models {
   class DummyList extends CustomResourceList[Dummy] {}
 
   @JsonDeserialize(using = classOf[JsonDeserializer.None])
+  //  TODO when everything works remove this annotation!
+  @JsonIgnoreProperties(ignoreUnknown = true)
   class DummySpec() extends KubernetesResource {
     var foo: String = null
     var bar: String = null
@@ -59,6 +86,43 @@ object fabric8Models {
       this.bar = bar
     }
   }
+
+  @JsonDeserialize(using = classOf[JsonDeserializer.None])
+  //  TODO when everything works remove this annotation!
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  class DummyStatus() extends KubernetesResource {
+    var foo: String = null
+    var bar: String = null
+//    @JsonProperty("wrapper")
+//    var endpointStatuses: List[EndpointStatuses] = null
+//    var streamlet_statuses: List[StreamletStatus] = null
+    override def toString: String =
+      "DummySpec{" + "foo='" + foo + '\'' + ", bar='" + bar + '\'' + '}'
+
+    def getFoo: String = foo
+
+    def setFoo(foo: String): Unit = {
+      this.foo = foo
+    }
+
+    def getBar: String = bar
+
+    def setBar(bar: String): Unit = {
+      this.bar = bar
+    }
+  }
+
+//  type StreamletStatus struct {
+//    StreamletName string      `json:"streamlet_name"`
+//    PodStatuses   []PodStatus `json:"pod_statuses"`
+//  }
+//
+//  // EndpointStatus contains the status of the endpoint
+//  type EndpointStatus struct {
+//    StreamletName string `json:"streamlet_name"`
+//    URL           string `json:"url"`
+//  }
+
 //  case class CloudflowApplication(
 //      var spec: CloudflowApplicationSpec = null
 //  ) extends CustomResource

@@ -24,8 +24,17 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.0",
   "io.quarkus" % "quarkus-kubernetes-client" % "1.9.0.Final",
   "com.github.alexarchambault" %% "case-app" % "2.0.4",
-  "org.wvlet.airframe" %% "airframe-log" % "20.10.0"
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
+  "org.wvlet.airframe" %% "airframe-log" % "20.10.0",
+
+  // Using this breaks Graal image :-(
+  // works ... but not well ...
+  // check back when GraalVM 20.3.0 is out
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.11.3", // matches the provided one
 )
+
+
+
 
 enablePlugins(BuildInfoPlugin, GraalVMNativeImagePlugin)
 // this will build the Linux binaries on docker
