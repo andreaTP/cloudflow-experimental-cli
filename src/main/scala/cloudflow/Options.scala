@@ -14,5 +14,5 @@ case class Options(
     @ValueDescription("kube-config")
     kubeConfig: Option[String] = None
 ) {
-  def loggingLevel = logLevel.getOrElse("info")
+  def loggingLevel = logLevel.getOrElse("error")
 }
