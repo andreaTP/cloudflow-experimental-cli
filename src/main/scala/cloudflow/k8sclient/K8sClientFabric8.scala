@@ -23,6 +23,7 @@ class K8sClientFabric8(val config: Option[String])(
     .jsonMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
 
+  // TODO: verify that the configuration is intialized at runtime
   private val kubeConfig = {
     lazy val fromEnv = sys.env.get("KUBECONFIG").map(Config.fromKubeconfig)
     val fromStr = config.fold(fromEnv) { str =>
@@ -33,7 +34,6 @@ class K8sClientFabric8(val config: Option[String])(
   }
 
   // TODO: verify compatibility with OpenShift
-  // TODO verify that is intialized at runtime
   private lazy val client = new DefaultKubernetesClient(kubeConfig)
 
   private lazy val cloudflowApplications = {

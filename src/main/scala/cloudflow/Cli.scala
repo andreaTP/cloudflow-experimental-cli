@@ -11,7 +11,10 @@ class Cli(logger: CliLogger, k8sConfig: Option[String])(
 
   private implicit lazy val k8sClient = new K8sClientFabric8(k8sConfig)
 
-  def run(command: Command): Future[Unit] = {
+  def run[T](
+      command: Command,
+      render: Result[_] => T = renderResult(_)
+  ): Future[T] = {
 
     logger.trace(s"Cli run command: $command")
 
@@ -29,19 +32,23 @@ class Cli(logger: CliLogger, k8sConfig: Option[String])(
     (for {
       res <- exec.run()
     } yield {
-      logger.trace(s"Action executed successfully, result: $res")
-      res.content match {
-        case Right(_) => println(res.render())
-        case Left(error) =>
-          Console.err.println("Error:")
-          error.printStackTrace
-      }
-      ()
+      render(res)
     }).recoverWith {
       case ex =>
         logger.error("Unexpected failure", ex)
         Future.failed(ex)
     }
+  }
+
+  def renderResult(result: Result[_]): Unit = {
+    logger.trace(s"Action executed successfully, result: $result")
+    result.content match {
+      case Right(_) => println(result.render())
+      case Left(error) =>
+        Console.err.println("Error:")
+        error.printStackTrace
+    }
+    ()
   }
 
 }
