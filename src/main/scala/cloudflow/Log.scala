@@ -31,6 +31,7 @@ class CliLogger(level: String) {
   def trace(msg: => String) = logger.trace(msg)
   def info(msg: => String) = logger.info(msg)
   def warn(msg: => String) = logger.warn(msg)
+  def warn(msg: => String, ex: => Throwable) = logger.warn(msg, ex)
   def error(msg: => String) = logger.error(msg)
   def error(msg: => String, ex: => Throwable) = logger.error(msg, ex)
 

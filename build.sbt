@@ -24,7 +24,7 @@ resolvers += Resolver.bintrayRepo("astrac", "maven")
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.0",
-  "io.quarkus" % "quarkus-kubernetes-client" % "1.9.0.Final",
+  "io.quarkus" % "quarkus-kubernetes-client" % "1.9.0.Final" exclude ("org.jboss.slf4j", "slf4j-jboss-logging"),
   "com.github.alexarchambault" %% "case-app" % "2.0.4",
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.wvlet.airframe" %% "airframe-log" % "20.10.0",

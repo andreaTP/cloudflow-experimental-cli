@@ -3,7 +3,7 @@ package execution
 
 import k8sclient.K8sClient
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 final case class StatusExecution(s: commands.Status)(
     implicit client: K8sClient,
@@ -13,9 +13,7 @@ final case class StatusExecution(s: commands.Status)(
   def run() = {
     logger.trace("Executing command Status")
     s.cloudflowApp.fold(
-      Future.successful(
-        StatusResult(Left(new Exception("Target application not provided")))
-      )
+      throw new Exception("Target application not provided")
     ) { app =>
       for {
         res <- client.status(app)

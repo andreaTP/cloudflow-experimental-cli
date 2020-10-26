@@ -15,7 +15,7 @@ import io.fabric8.kubernetes.client.{
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 class K8sClientFabric8(
     val config: Option[String],
@@ -30,7 +30,7 @@ class K8sClientFabric8(
     .jsonMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
 
-  private lazy val cloudflowApplications = Try {
+  private lazy val cloudflowApplicationsClient = Try {
     // TODO: verify that the configuration is intialized at runtime
     val kubeConfig = {
       lazy val fromEnv = sys.env.get("KUBECONFIG").map(Config.fromKubeconfig)
@@ -58,14 +58,19 @@ class K8sClientFabric8(
         .headOption
         .getOrElse(throw new Exception("Cloudflow not found in the cluster"))
 
-    val cloudflowApplicationsClient = client.customResources(
+    val cloudflowClient = client.customResources(
       CustomResourceDefinitionContext.fromCrd(crd),
       classOf[CloudflowApplication],
       classOf[CloudflowApplicationList],
       classOf[DoneableCloudflowApplication]
     )
 
-    cloudflowApplicationsClient.list().getItems.asScala
+    cloudflowClient
+  }.recoverWith {
+    case ex =>
+      Failure(
+        new Exception("Cannot find cloudflow, is the operator installed?", ex)
+      )
   }
 
   def list() = {
@@ -73,16 +78,21 @@ class K8sClientFabric8(
 
     Future.fromTry {
       for {
-        cloudflowApps <- cloudflowApplications
+        cloudflowApps <- cloudflowApplicationsClient
         res <- Try {
-          val res = cloudflowApps.map { app =>
-            models.CRSummary(
-              app.getMetadata.getName,
-              app.getMetadata.getNamespace,
-              app.spec.appVersion,
-              app.getMetadata.getCreationTimestamp
-            )
-          }.toList
+          val res = cloudflowApps
+            .list()
+            .getItems
+            .asScala
+            .map { app =>
+              models.CRSummary(
+                app.getMetadata.getName,
+                app.getMetadata.getNamespace,
+                app.spec.appVersion,
+                app.getMetadata.getCreationTimestamp
+              )
+            }
+            .toList
           logger.trace(s"Fabric8 list command successful")
           res
         }
@@ -92,31 +102,37 @@ class K8sClientFabric8(
     }
   }
 
-  def status(app: String): Future[Either[Throwable, String]] = {
-    Future.successful(Right("something"))
+  def status(appName: String): Future[String] = {
+    Future.fromTry {
+      for {
+        cloudflowApps <- cloudflowApplicationsClient
+        res <- Try {
+          val app = cloudflowApps
+            .list()
+            .getItems()
+            .asScala
+            .find(_.getMetadata.getName == appName)
+            .getOrElse(
+              throw new Exception(
+                s"Cloudflow application: ${appName} not found"
+              )
+            )
+          println(app)
+          // GO on from here
+          //          models.ApplicationStatus()
+          //          printAppStatus(applicationCR, applicationCR.Status.AppStatus)
+          //          printEndpointStatuses(applicationCR)
+          //          printStreamletStatuses(applicationCR)
+
+          val res = "temp"
+          logger.trace(s"Fabric8 status command successful")
+          res
+        }
+      } yield {
+        res
+      }
+    }
+//    Future.successful("something")
   }
 
 }
-
-//private trait WithList {
-//  self: K8sClient =>
-//
-//  def list() = {
-//    logger.trace("Running the Fabric8 list command")
-//
-//    Future.fromTry {
-//      Try {
-//        val res = cloudflowApplications.map { app =>
-//          models.CRSummary(
-//            app.getMetadata.getName,
-//            app.getMetadata.getNamespace,
-//            app.spec.appVersion,
-//            app.getMetadata.getCreationTimestamp
-//          )
-//        }.toList
-//        logger.trace(s"Fabric8 list command successful")
-//        res
-//      }
-//    }
-//  }
-//}

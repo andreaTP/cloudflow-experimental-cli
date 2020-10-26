@@ -47,19 +47,16 @@ class Cli(
       render(res)
     }).recoverWith {
       case ex =>
-        logger.error("Unexpected failure", ex)
+        logger.warn("Failure", ex)
+        Console.err.println("Error:")
+        Console.err.println(ex.getMessage())
         Future.failed(ex)
     }
   }
 
   def renderResult(result: Result[_]): Unit = {
     logger.trace(s"Action executed successfully, result: $result")
-    result.content match {
-      case Right(_) => println(result.render())
-      case Left(error) =>
-        Console.err.println("Error:")
-        Console.err.println(error.getMessage())
-    }
+    println(result.render())
     ()
   }
 

@@ -5,19 +5,19 @@ import k8sclient.models
 import com.blinkfox.minitable.MiniTable
 
 sealed trait Result[T] {
-  val content: Either[Throwable, T]
+  val content: T
 
   def render(): String
 }
 
 case class VersionResult(version: String) extends Result[String] {
-  val content = Right(version)
+  val content = version
   def render(): String = version
 }
 
 case class ListResult(summaries: List[models.CRSummary])
     extends Result[List[models.CRSummary]] {
-  val content = Right(summaries)
+  val content = summaries
 
   def render(): String = {
     val table = new MiniTable()
@@ -31,13 +31,10 @@ case class ListResult(summaries: List[models.CRSummary])
   }
 }
 
-case class StatusResult(res: Either[Throwable, String]) extends Result[String] {
-  val content: Either[Throwable, String] = res
+case class StatusResult(status: String) extends Result[String] {
+  val content: String = status
 
   def render(): String = {
-    res match {
-      case Right(s) => s
-      case _        => "Error"
-    }
+    status
   }
 }

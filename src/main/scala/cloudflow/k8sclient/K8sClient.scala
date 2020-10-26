@@ -13,6 +13,6 @@ trait K8sClient {
 
   def list(): Future[List[models.CRSummary]]
 
-  def status(app: String): Future[Either[Throwable, String]]
+  def status(app: String): Future[String]
 
 }
