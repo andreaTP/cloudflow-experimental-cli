@@ -5,7 +5,7 @@ import k8sclient.models
 import com.blinkfox.minitable.MiniTable
 
 sealed trait Result[T] {
-  val content: T
+  val content: Either[Throwable, T]
 
   def render(): String
 }
