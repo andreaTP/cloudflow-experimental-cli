@@ -16,6 +16,7 @@ class CliWrokflowSpec extends AsyncFlatSpec with Matchers {
   val testingK8sClient = new K8sClient {
     def list(): Future[List[models.CRSummary]] =
       Future.successful(List(testingCRSummary))
+    def status(app: String) = ???
   }
   val testingRender = (result: Result[_]) => ()
 

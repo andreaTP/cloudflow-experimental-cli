@@ -21,7 +21,7 @@ class K8sClientFabric8(
     val config: Option[String],
     clientFactory: Config => KubernetesClient = new DefaultKubernetesClient(_)
 )(
-    implicit logger: CliLogger
+    implicit val logger: CliLogger
 ) extends K8sClient {
 
   Serialization.jsonMapper().registerModule(DefaultScalaModule)
@@ -30,20 +30,20 @@ class K8sClientFabric8(
     .jsonMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
 
-  // TODO: verify that the configuration is intialized at runtime
-  private val kubeConfig = {
-    lazy val fromEnv = sys.env.get("KUBECONFIG").map(Config.fromKubeconfig)
-    val fromStr = config.fold(fromEnv) { str =>
-      Some(Config.fromKubeconfig(str))
+  private lazy val cloudflowApplications = Try {
+    // TODO: verify that the configuration is intialized at runtime
+    val kubeConfig = {
+      lazy val fromEnv = sys.env.get("KUBECONFIG").map(Config.fromKubeconfig)
+      val fromStr = config.fold(fromEnv) { str =>
+        Some(Config.fromKubeconfig(str))
+      }
+
+      fromStr.getOrElse(Config.autoConfigure(null))
     }
 
-    fromStr.getOrElse(Config.autoConfigure(null))
-  }
+    // TODO: verify compatibility with OpenShift
+    val client = clientFactory(kubeConfig)
 
-  // TODO: verify compatibility with OpenShift
-  private lazy val client = clientFactory(kubeConfig)
-
-  private lazy val cloudflowApplications = {
     val crd =
       client
         .customResourceDefinitions()
@@ -72,19 +72,51 @@ class K8sClientFabric8(
     logger.trace("Running the Fabric8 list command")
 
     Future.fromTry {
-      Try {
-        val res = cloudflowApplications.map { app =>
-          models.CRSummary(
-            app.getMetadata.getName,
-            app.getMetadata.getNamespace,
-            app.spec.appVersion,
-            app.getMetadata.getCreationTimestamp
-          )
-        }.toList
-        logger.trace(s"Fabric8 list command successful")
+      for {
+        cloudflowApps <- cloudflowApplications
+        res <- Try {
+          val res = cloudflowApps.map { app =>
+            models.CRSummary(
+              app.getMetadata.getName,
+              app.getMetadata.getNamespace,
+              app.spec.appVersion,
+              app.getMetadata.getCreationTimestamp
+            )
+          }.toList
+          logger.trace(s"Fabric8 list command successful")
+          res
+        }
+      } yield {
         res
       }
     }
   }
 
+  def status(app: String): Future[Either[Throwable, String]] = {
+    Future.successful(Right("something"))
+  }
+
 }
+
+//private trait WithList {
+//  self: K8sClient =>
+//
+//  def list() = {
+//    logger.trace("Running the Fabric8 list command")
+//
+//    Future.fromTry {
+//      Try {
+//        val res = cloudflowApplications.map { app =>
+//          models.CRSummary(
+//            app.getMetadata.getName,
+//            app.getMetadata.getNamespace,
+//            app.spec.appVersion,
+//            app.getMetadata.getCreationTimestamp
+//          )
+//        }.toList
+//        logger.trace(s"Fabric8 list command successful")
+//        res
+//      }
+//    }
+//  }
+//}

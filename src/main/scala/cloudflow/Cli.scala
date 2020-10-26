@@ -32,8 +32,9 @@ class Cli(
     val exec = command match {
       case cmd: Version => execution.VersionExecution(cmd)
       case cmd: List    => execution.ListExecution(cmd)
+      case cmd: Status  => execution.StatusExecution(cmd)
       case _ =>
-        val msg = "No action defined for the command."
+        val msg = "No execution defined for the command."
         logger.error(msg)
         throw new Exception(msg)
     }
@@ -57,7 +58,7 @@ class Cli(
       case Right(_) => println(result.render())
       case Left(error) =>
         Console.err.println("Error:")
-        error.printStackTrace
+        Console.err.println(error.getMessage())
     }
     ()
   }

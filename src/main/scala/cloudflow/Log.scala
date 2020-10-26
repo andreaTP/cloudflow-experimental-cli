@@ -1,14 +1,29 @@
 package cloudflow
 
 import buildinfo.BuildInfo
-import wvlet.log.Logger
-import wvlet.log.LogLevel
+import wvlet.log.LogFormatter.{appendStackTrace, highlightLog, withColor}
+import wvlet.log.LogTimestampFormatter.formatTimestamp
+import wvlet.log.{LogFormatter, LogLevel, LogRecord, Logger}
 
 class CliLogger(level: String) {
+
+  private object NoLocSourceCodeLogFormatter extends LogFormatter {
+    override def formatLog(r: LogRecord): String = {
+
+      val logTag = highlightLog(r.level, r.level.name)
+      val log =
+        f"${withColor(Console.BLUE, formatTimestamp(r.getMillis))} ${logTag}%14s [${withColor(
+          Console.WHITE,
+          r.leafLoggerName
+        )}] ${highlightLog(r.level, r.getMessage)}"
+      appendStackTrace(log, r)
+    }
+  }
 
   private val logger = {
     Logger.init
     val _logger = Logger(BuildInfo.name)
+    _logger.setFormatter(NoLocSourceCodeLogFormatter)
     _logger.setLogLevel(LogLevel(level))
     _logger
   }

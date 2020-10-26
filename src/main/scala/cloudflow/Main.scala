@@ -23,6 +23,7 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
       super.main(args)
     }
   }
+
   def beforeCommand(options: Options, remainingArgs: Seq[String]) = {
     val logger = new CliLogger(options.loggingLevel)
     cliLogger.success(logger)
@@ -44,10 +45,12 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
       cliLogger: CliLogger
   ): Future[Unit] = {
     Future.successful({
-      if (args.remaining.nonEmpty || args.unparsed.nonEmpty) {
+      if (args.remaining.nonEmpty) {
         cliLogger.warn(
           s"Remaining arguments ${args.remaining.mkString(", ")}"
         )
+      }
+      if (args.unparsed.nonEmpty) {
         cliLogger.warn(
           s"Unparsed arguments ${args.unparsed.mkString(", ")}"
         )
@@ -55,8 +58,29 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
     })
   }
 
-  def run(command: Command, args: RemainingArgs): Unit = {
+  def applyDefaultArgs(
+      command: Command,
+      args: RemainingArgs
+  ): (Command, RemainingArgs) = {
+    command match {
+      case wd: WithDefault if args.remaining.nonEmpty =>
+        (
+          wd.withDefault(args.remaining.head),
+          args.withRemaining(args.remaining.tail)
+        )
+      case wd: WithDefault if args.remaining.isEmpty && !wd.isDefined =>
+        Console.err.println("Default argument not specified")
+        System.exit(1)
+        throw new Exception("unreachable code")
+      case _ => (command, args)
+    }
+  }
+
+  def run(_command: Command, _args: RemainingArgs): Unit = {
     implicit val ec = ExecutionContext.global
+
+    val (command, args) = applyDefaultArgs(_command, _args)
+
     val res = (for {
       logger <- cliLogger.future
       config <- k8sConfig.future
