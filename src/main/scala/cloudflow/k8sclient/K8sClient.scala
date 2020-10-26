@@ -11,8 +11,6 @@ object K8sClient {
 
 trait K8sClient {
 
-  val config: Option[String]
-
   def list(): Future[List[models.CRSummary]]
 
 }

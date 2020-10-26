@@ -7,13 +7,20 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import fabric8Models._
 import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext
 import io.fabric8.kubernetes.client.utils.Serialization
-import io.fabric8.kubernetes.client.{Config, DefaultKubernetesClient}
+import io.fabric8.kubernetes.client.{
+  Config,
+  DefaultKubernetesClient,
+  KubernetesClient
+}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future
 import scala.util.Try
 
-class K8sClientFabric8(val config: Option[String])(
+class K8sClientFabric8(
+    val config: Option[String],
+    clientFactory: Config => KubernetesClient = new DefaultKubernetesClient(_)
+)(
     implicit logger: CliLogger
 ) extends K8sClient {
 
@@ -34,7 +41,7 @@ class K8sClientFabric8(val config: Option[String])(
   }
 
   // TODO: verify compatibility with OpenShift
-  private lazy val client = new DefaultKubernetesClient(kubeConfig)
+  private lazy val client = clientFactory(kubeConfig)
 
   private lazy val cloudflowApplications = {
     val crd =

@@ -1,7 +1,8 @@
 package cloudflow
 
-import cloudflow.k8sclient.models.CRSummary
 import k8sclient.models
+
+import com.blinkfox.minitable.MiniTable
 
 sealed trait Result[T] {
   val content: Either[Throwable, T]
@@ -21,6 +22,13 @@ final case class ListResult(summaries: List[models.CRSummary])
   val content = Right(summaries)
 
   def render(): String = {
-    summaries.mkString("\n")
+    val table = new MiniTable()
+      .addHeaders("NAME", "NAMESPACE", "VERSION", "CREATION-TIME")
+
+    summaries.foreach { s =>
+      table.addDatas(s.name, s.namespace, s.version, s.creationTime)
+    }
+
+    table.render()
   }
 }

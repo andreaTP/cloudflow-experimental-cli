@@ -1,15 +1,26 @@
 package cloudflow
 
+import cloudflow.Cli.defaultK8sClient
 import commands._
 import k8sclient._
+
 import scala.concurrent.{ExecutionContext, Future}
 
-class Cli(logger: CliLogger, k8sConfig: Option[String])(
-    implicit ec: ExecutionContext
-) {
-  private implicit val log = logger
+object Cli {
 
-  private implicit lazy val k8sClient = new K8sClientFabric8(k8sConfig)
+  def defaultK8sClient(config: Option[String], logger: CliLogger) =
+    new K8sClientFabric8(config)(logger)
+}
+
+class Cli(
+    k8sConfig: Option[String],
+    k8sClientFactory: (Option[String], CliLogger) => K8sClient =
+      defaultK8sClient(_, _)
+)(
+    implicit ec: ExecutionContext,
+    logger: CliLogger
+) {
+  private implicit lazy val k8sClient = k8sClientFactory(k8sConfig, logger)
 
   def run[T](
       command: Command,
