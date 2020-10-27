@@ -171,7 +171,7 @@ case class StatusResult(status: ApplicationStatus)
             val _endpointsTable = new MiniTable()
               .addHeaders(endpointHeaders: _*)
 
-            status.endpointsStatuses.foreach { endpointStatus =>
+            status.endpointsStatuses.sortBy(_.name).foreach { endpointStatus =>
               _endpointsTable.addDatas(
                 endpointStatus.name,
                 endpointStatus.url.toString
@@ -189,26 +189,28 @@ case class StatusResult(status: ApplicationStatus)
             val _streamletsTable = new MiniTable()
               .addHeaders(streamletHeaders: _*)
 
-            status.streamletsStatuses.foreach { streamletStatus =>
-              if (streamletStatus.podsStatuses.isEmpty) {
-                _streamletsTable.addDatas(
-                  streamletStatus.name,
-                  "",
-                  "0/0",
-                  "Missing",
-                  "0"
-                )
-              } else {
-                streamletStatus.podsStatuses.foreach { podStatus =>
+            status.streamletsStatuses.sortBy(_.name).foreach {
+              streamletStatus =>
+                if (streamletStatus.podsStatuses.isEmpty) {
                   _streamletsTable.addDatas(
                     streamletStatus.name,
-                    podStatus.name,
-                    s"${podStatus.ready.ready}/${podStatus.ready.total}",
-                    podStatus.status,
-                    s"${podStatus.restarts}"
+                    "",
+                    "0/0",
+                    "Missing",
+                    "0"
                   )
+                } else {
+                  streamletStatus.podsStatuses.sortBy(_.name).foreach {
+                    podStatus =>
+                      _streamletsTable.addDatas(
+                        streamletStatus.name,
+                        podStatus.name,
+                        s"${podStatus.ready.ready}/${podStatus.ready.total}",
+                        podStatus.status,
+                        s"${podStatus.restarts}"
+                      )
+                  }
                 }
-              }
             }
 
             _streamletsTable.render()

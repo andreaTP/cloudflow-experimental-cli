@@ -1,7 +1,7 @@
 package cloudflow
 
-import scala.concurrent.Future
+import scala.util.Try
 
 trait Execution {
-  def run(): Future[_ <: Result[_]]
+  def run(): Try[_ <: Result[_]]
 }

@@ -1,7 +1,6 @@
 package cloudflow
 
 import commands._
-import caseapp._
 import caseapp.core._
 import caseapp.core.app._
 
@@ -84,9 +83,9 @@ object Main extends CommandAppWithPreCommand[Options, Command] {
     val res = (for {
       logger <- cliLogger.future
       config <- k8sConfig.future
-      cli = new Cli(config)(ec, logger)
+      cli = new Cli(config)(logger)
       _ <- warningOnRemainingArgs(args, logger)
-      _ <- cli.run(command)
+      _ <- Future.fromTry(cli.run(command))
     } yield {
       logger.close()
 

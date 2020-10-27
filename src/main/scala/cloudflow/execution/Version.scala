@@ -3,9 +3,10 @@ package execution
 
 import buildinfo.BuildInfo
 
-import scala.concurrent.Future
+import scala.util.{Success, Try}
 
 final case class VersionExecution(v: commands.Version) extends Execution {
-  def run() =
-    Future.successful(VersionResult(BuildInfo.version))
+  def run(): Try[VersionResult] = {
+    Success(VersionResult(BuildInfo.version))
+  }
 }

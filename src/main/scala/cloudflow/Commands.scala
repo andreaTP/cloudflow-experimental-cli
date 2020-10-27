@@ -7,6 +7,7 @@ import cloudflow.commands.format.Format
 object format extends Enumeration {
   type Format = Value
   val Classic, Fancy, Json = Value
+  val Default: Value = Fancy
 }
 
 sealed trait Command {
@@ -25,7 +26,7 @@ case class OutputFormat(
     output: Option[String]
 ) {
   def getFormat() = {
-    output.fold(format.Fancy) { fmt =>
+    output.fold(format.Default) { fmt =>
       fmt match {
         case "c" | "classic" => format.Classic
         case "f" | "fancy"   => format.Fancy

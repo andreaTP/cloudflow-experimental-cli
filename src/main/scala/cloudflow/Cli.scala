@@ -4,22 +4,20 @@ import cloudflow.Cli.defaultK8sClient
 import commands._
 import k8sclient._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Try}
 
 object Cli {
 
   def defaultK8sClient(config: Option[String], logger: CliLogger) =
     new K8sClientFabric8(config)(logger)
+
 }
 
 class Cli(
     k8sConfig: Option[String],
     k8sClientFactory: (Option[String], CliLogger) => K8sClient =
       defaultK8sClient(_, _)
-)(
-    implicit ec: ExecutionContext,
-    logger: CliLogger
-) {
+)(implicit logger: CliLogger) {
   private implicit lazy val k8sClient = k8sClientFactory(k8sConfig, logger)
 
   def defaultRender(cmd: Command, res: Result[_]): Unit = {
@@ -29,7 +27,7 @@ class Cli(
   def run[T](
       command: Command,
       render: (Command, Result[_]) => T = defaultRender(_, _)
-  ): Future[T] = {
+  ): Try[T] = {
 
     logger.trace(s"Cli run command: $command")
 
@@ -54,7 +52,7 @@ class Cli(
         logger.warn("Failure", ex)
         Console.err.println("Error:")
         Console.err.println(ex.getMessage())
-        Future.failed(ex)
+        Failure(ex)
     }
   }
 

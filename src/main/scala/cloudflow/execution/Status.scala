@@ -3,14 +3,13 @@ package execution
 
 import k8sclient.K8sClient
 
-import scala.concurrent.ExecutionContext
+import scala.util.Try
 
 final case class StatusExecution(s: commands.Status)(
     implicit client: K8sClient,
-    ec: ExecutionContext,
     logger: CliLogger
 ) extends Execution {
-  def run() = {
+  def run(): Try[StatusResult] = {
     logger.trace("Executing command Status")
     s.cloudflowApp.fold(
       throw new Exception("Target application not provided")

@@ -8,9 +8,6 @@ import io.fabric8.kubernetes.client.server.mock.KubernetesServer
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest._
 import matchers.should._
-import io.fabric8.kubernetes.client.KubernetesClient
-import io.fabric8.kubernetes.client.dsl.MixedOperation
-import io.fabric8.kubernetes.client.dsl.Resource
 
 import scala.io.Source
 
@@ -55,19 +52,18 @@ class Fabric8K8sClientSpec
       .once
 
     // Act
-    val cloudflowApps =
+    val apps =
       new K8sClientFabric8(None, (_) => server.getClient).list()
 
     // Assert
-    cloudflowApps.map { apps =>
-      apps.size shouldBe 1
-      apps.head shouldBe (CRSummary(
-        "swiss-knife",
-        "swiss-knife",
-        "2.0.11",
-        "2020-10-26T17:26:18Z"
-      ))
-    }
+    apps.isSuccess shouldBe true
+    apps.get.size shouldBe 1
+    apps.get.head shouldBe (CRSummary(
+      "swiss-knife",
+      "swiss-knife",
+      "2.0.11",
+      "2020-10-26T17:26:18Z"
+    ))
   }
 
 }

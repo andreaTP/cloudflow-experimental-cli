@@ -14,15 +14,13 @@ import io.fabric8.kubernetes.client.{
 }
 
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
 import scala.util.{Failure, Try}
 
 class K8sClientFabric8(
     val config: Option[String],
     clientFactory: Config => KubernetesClient = new DefaultKubernetesClient(_)
-)(
-    implicit val logger: CliLogger
-) extends K8sClient {
+)(implicit val logger: CliLogger)
+    extends K8sClient {
 
   Serialization.jsonMapper().registerModule(DefaultScalaModule)
   // doublecheck if needed
@@ -87,57 +85,53 @@ class K8sClientFabric8(
   def list() = {
     logger.trace("Running the Fabric8 list command")
 
-    Future.fromTry {
-      for {
-        cloudflowApps <- cloudflowApplicationsClient
-        res <- Try {
-          val res = cloudflowApps
-            .list()
-            .getItems
-            .asScala
-            .map(getCRSummary)
-            .toList
-          logger.trace(s"Fabric8 list command successful")
-          res
-        }
-      } yield {
+    for {
+      cloudflowApps <- cloudflowApplicationsClient
+      res <- Try {
+        val res = cloudflowApps
+          .list()
+          .getItems
+          .asScala
+          .map(getCRSummary)
+          .toList
+        logger.trace(s"Fabric8 list command successful")
         res
       }
+    } yield {
+      res
     }
   }
 
-  def status(appName: String): Future[models.ApplicationStatus] = {
-    Future.fromTry {
-      for {
-        cloudflowApps <- cloudflowApplicationsClient
-        res <- Try {
-          val app = cloudflowApps
-            .list()
-            .getItems()
-            .asScala
-            .find(_.getMetadata.getName == appName)
-            .getOrElse(
-              throw new Exception(
-                s"""Cloudflow application "${appName}" not found"""
-              )
+  def status(appName: String): Try[models.ApplicationStatus] = {
+    for {
+      cloudflowApps <- cloudflowApplicationsClient
+      res <- Try {
+        val app = cloudflowApps
+          .list()
+          .getItems()
+          .asScala
+          .find(_.getMetadata.getName == appName)
+          .getOrElse(
+            throw new Exception(
+              s"""Cloudflow application "${appName}" not found"""
             )
-
-          val res = models.ApplicationStatus(
-            summary = getCRSummary(app),
-            status = app.status.appStatus,
-            endpointsStatuses = Option(app.status.endpointStatuses)
-              .map(_.map(getEndpointStatus))
-              .getOrElse(List.empty),
-            streamletsStatuses = Option(app.status.streamletStatuses)
-              .map(_.map(getStreamletStatus))
-              .getOrElse(List.empty)
           )
-          logger.trace(s"Fabric8 status command successful")
-          res
-        }
-      } yield {
+
+        val res = models.ApplicationStatus(
+          summary = getCRSummary(app),
+          status = app.status.appStatus,
+          endpointsStatuses = Option(app.status.endpointStatuses)
+            .map(_.map(getEndpointStatus))
+            .getOrElse(List.empty),
+          streamletsStatuses = Option(app.status.streamletStatuses)
+            .map(_.map(getStreamletStatus))
+            .getOrElse(List.empty)
+        )
+        logger.trace(s"Fabric8 status command successful")
         res
       }
+    } yield {
+      res
     }
   }
 

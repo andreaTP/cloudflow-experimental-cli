@@ -1,7 +1,7 @@
 package cloudflow
 package k8sclient
 
-import scala.concurrent.Future
+import scala.util.Try
 
 object K8sClient {
 
@@ -11,8 +11,8 @@ object K8sClient {
 
 trait K8sClient {
 
-  def list(): Future[List[models.CRSummary]]
+  def list(): Try[List[models.CRSummary]]
 
-  def status(app: String): Future[models.ApplicationStatus]
+  def status(app: String): Try[models.ApplicationStatus]
 
 }
