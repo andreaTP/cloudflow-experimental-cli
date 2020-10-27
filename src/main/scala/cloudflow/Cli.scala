@@ -22,9 +22,13 @@ class Cli(
 ) {
   private implicit lazy val k8sClient = k8sClientFactory(k8sConfig, logger)
 
+  def defaultRender(cmd: Command, res: Result[_]): Unit = {
+    renderResult(res, cmd.getOutput())
+  }
+
   def run[T](
       command: Command,
-      render: Result[_] => T = renderResult(_)
+      render: (Command, Result[_]) => T = defaultRender(_, _)
   ): Future[T] = {
 
     logger.trace(s"Cli run command: $command")
@@ -44,7 +48,7 @@ class Cli(
     (for {
       res <- exec.run()
     } yield {
-      render(res)
+      render(command, res)
     }).recoverWith {
       case ex =>
         logger.warn("Failure", ex)
@@ -54,9 +58,9 @@ class Cli(
     }
   }
 
-  def renderResult(result: Result[_]): Unit = {
+  def renderResult(result: Result[_], fmt: format.Format): Unit = {
     logger.trace(s"Action executed successfully, result: $result")
-    println(result.render())
+    println(result.render(fmt))
     ()
   }
 

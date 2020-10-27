@@ -2,23 +2,61 @@ package cloudflow
 package commands
 
 import caseapp._
+import cloudflow.commands.format.Format
 
-sealed trait Command {}
+object format extends Enumeration {
+  type Format = Value
+  val Classic, Fancy, Json = Value
+}
+
+sealed trait Command {
+  def getOutput(): format.Format
+}
 
 sealed trait WithDefault {
   def isDefined(): Boolean
   def withDefault(value: String): Command
 }
 
-case class Version() extends Command {}
+case class OutputFormat(
+    @HelpMessage("the output format")
+    @ValueDescription("output-format")
+    @ExtraName("o")
+    output: Option[String]
+) {
+  def getFormat() = {
+    output.fold(format.Fancy) { fmt =>
+      fmt match {
+        case "c" | "classic" => format.Classic
+        case "f" | "fancy"   => format.Fancy
+        case "json"          => format.Json
+      }
+    }
+  }
+}
 
-case class List() extends Command {}
+case class Version(
+    @Recurse
+    output: OutputFormat
+) extends Command {
+  def getOutput(): Format = output.getFormat()
+}
+
+case class List(
+    @Recurse
+    output: OutputFormat
+) extends Command {
+  def getOutput(): Format = output.getFormat()
+}
 
 case class Status(
     @HelpMessage("the Cloudflow Application")
-    cloudflowApp: Option[String]
+    cloudflowApp: Option[String],
+    @Recurse
+    output: OutputFormat
 ) extends Command
     with WithDefault {
+  def getOutput(): Format = output.getFormat()
   def isDefined(): Boolean = cloudflowApp.isDefined
   def withDefault(value: String) =
     copy(cloudflowApp = Some(value))
@@ -27,9 +65,12 @@ case class Status(
 case class Deploy(
     @HelpMessage("the CR file to deploy")
     @ValueDescription("cr")
-    cr: Option[String]
+    cr: Option[String],
+    @Recurse
+    output: OutputFormat
 ) extends Command
     with WithDefault {
+  def getOutput(): Format = output.getFormat()
   def isDefined(): Boolean = cr.isDefined
   def withDefault(value: String) =
     copy(cr = Some(value))
