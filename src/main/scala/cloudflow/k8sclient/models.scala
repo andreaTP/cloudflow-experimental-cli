@@ -12,20 +12,25 @@ object models {
       creationTime: String
   )
 
+  case class ContainersReady(ready: Int, total: Int)
+  case class PodStatus(
+      name: String,
+      ready: ContainersReady,
+      status: String,
+      restarts: Int
+  )
+
   case class EndpointStatus(name: String, url: URL)
   case class StreamletStatus(
       name: String,
-      pod: String,
-      ready: (Int, Int),
-      status: String,
-      restarts: Int
+      podsStatuses: List[PodStatus]
   )
 
   case class ApplicationStatus(
       summary: CRSummary,
       status: String,
-      endpointStatuses: List[EndpointStatus],
-      streamletStatuses: List[StreamletStatus]
+      endpointsStatuses: List[EndpointStatus],
+      streamletsStatuses: List[StreamletStatus]
   )
 
 }

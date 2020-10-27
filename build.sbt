@@ -29,7 +29,6 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.wvlet.airframe" %% "airframe-log" % "20.10.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.11.3", // matches the provided one
-  "com.blinkfox" % "mini-table" % "1.0.0", // table output
   "org.scalatest" %% "scalatest" % "3.2.0" % Test,
   "io.fabric8" % "kubernetes-server-mock" % "4.12.0" % Test
 )

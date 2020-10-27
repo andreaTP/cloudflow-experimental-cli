@@ -27,6 +27,8 @@ protected[k8sclient] object fabric8Models {
       status: CloudflowApplicationStatus
   ) extends CustomResource
       with Namespaced {
+    lazy val name = getMetadata().getName()
+    lazy val namespace = getMetadata().getNamespace()
     override def getMetadata: ObjectMeta = super.getMetadata
   }
 
@@ -217,9 +219,9 @@ protected[k8sclient] object fabric8Models {
       @JsonProperty("ready")
       ready: String,
       @JsonProperty("nr_of_containers_ready")
-      nrOfContainersReady: String,
+      nrOfContainersReady: Int,
       @JsonProperty("nr_of_containers")
-      nrOfContainers: String,
+      nrOfContainers: Int,
       @JsonProperty("restarts")
       restarts: Int,
       @JsonProperty("status")

@@ -73,6 +73,17 @@ class K8sClientFabric8(
       )
   }
 
+  private def getCRSummary(app: CloudflowApplication) = {
+    models.CRSummary(
+      name = app.name,
+      namespace = app.namespace,
+      version = app.spec.appVersion,
+      creationTime = app.getMetadata.getCreationTimestamp
+    )
+  }
+
+  import ModelConversions._
+
   def list() = {
     logger.trace("Running the Fabric8 list command")
 
@@ -84,14 +95,7 @@ class K8sClientFabric8(
             .list()
             .getItems
             .asScala
-            .map { app =>
-              models.CRSummary(
-                app.getMetadata.getName,
-                app.getMetadata.getNamespace,
-                app.spec.appVersion,
-                app.getMetadata.getCreationTimestamp
-              )
-            }
+            .map(getCRSummary)
             .toList
           logger.trace(s"Fabric8 list command successful")
           res
@@ -102,7 +106,7 @@ class K8sClientFabric8(
     }
   }
 
-  def status(appName: String): Future[String] = {
+  def status(appName: String): Future[models.ApplicationStatus] = {
     Future.fromTry {
       for {
         cloudflowApps <- cloudflowApplicationsClient
@@ -114,17 +118,20 @@ class K8sClientFabric8(
             .find(_.getMetadata.getName == appName)
             .getOrElse(
               throw new Exception(
-                s"Cloudflow application: ${appName} not found"
+                s"""Cloudflow application "${appName}" not found"""
               )
             )
-          println(app)
-          // GO on from here
-          //          models.ApplicationStatus()
-          //          printAppStatus(applicationCR, applicationCR.Status.AppStatus)
-          //          printEndpointStatuses(applicationCR)
-          //          printStreamletStatuses(applicationCR)
 
-          val res = "temp"
+          val res = models.ApplicationStatus(
+            summary = getCRSummary(app),
+            status = app.status.appStatus,
+            endpointsStatuses = Option(app.status.endpointStatuses)
+              .map(_.map(getEndpointStatus))
+              .getOrElse(List.empty),
+            streamletsStatuses = Option(app.status.streamletStatuses)
+              .map(_.map(getStreamletStatus))
+              .getOrElse(List.empty)
+          )
           logger.trace(s"Fabric8 status command successful")
           res
         }
@@ -132,7 +139,42 @@ class K8sClientFabric8(
         res
       }
     }
-//    Future.successful("something")
   }
 
+}
+
+private object ModelConversions {
+
+  def getCRSummary(app: CloudflowApplication): models.CRSummary = {
+    models.CRSummary(
+      name = app.name,
+      namespace = app.namespace,
+      version = app.spec.appVersion,
+      creationTime = app.getMetadata.getCreationTimestamp
+    )
+  }
+
+  def getEndpointStatus(status: EndpointStatus): models.EndpointStatus = {
+    models.EndpointStatus(
+      name = status.streamletName,
+      url = status.url
+    )
+  }
+
+  def getPodStatus(status: PodStatus): models.PodStatus = {
+    models.PodStatus(
+      name = status.name,
+      ready = models
+        .ContainersReady(status.nrOfContainersReady, status.nrOfContainers),
+      status = status.status,
+      restarts = status.restarts
+    )
+  }
+
+  def getStreamletStatus(status: StreamletStatus): models.StreamletStatus = {
+    models.StreamletStatus(
+      name = status.streamletName,
+      podsStatuses = status.podStatuses.map(getPodStatus)
+    )
+  }
 }
