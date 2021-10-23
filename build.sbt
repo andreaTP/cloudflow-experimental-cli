@@ -1,6 +1,6 @@
 name := "kubectl-cloudflow_exp"
 
-scalaVersion := "2.12.12"
+scalaVersion := "2.13.6"
 
 scalacOptions ++= Seq(
   "-encoding",
@@ -8,8 +8,7 @@ scalacOptions ++= Seq(
   "-target:jvm-1.8",
   "-Xlog-reflective-calls",
   "-Xlint",
-  "-Ywarn-unused",
-  "-Ywarn-unused-import",
+  "-Wunused:imports",
   "-deprecation",
   "-feature",
   "-language:_",
