@@ -13,7 +13,7 @@ import io.fabric8.kubernetes.client.{
   KubernetesClient
 }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Try}
 
 class K8sClientFabric8(

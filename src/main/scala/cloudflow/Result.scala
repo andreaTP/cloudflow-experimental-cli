@@ -92,7 +92,7 @@ object FancyHelper {
     import java.util.ArrayList
     import java.util.HashMap
     import java.util.List
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     private var lastRowType: RowType.Value = null
     private val join = new StringBuilder
@@ -117,7 +117,6 @@ object FancyHelper {
     }
 
     private def appendRows(rowType: RowType.Value, objects: Seq[Any]) = {
-      var len = 0
       if (objects != null && objects.length > 0) {
         val len = objects.length
         if (this.maxColMap.size > len) throw new IllegalArgumentException()
